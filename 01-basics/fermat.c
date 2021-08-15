@@ -3,56 +3,60 @@
 #include <stdlib.h>
 #include <time.h>
 
-unsigned long long mult_mod (unsigned long long n, 
-                             unsigned long long k, 
-                             unsigned long long m) {
+unsigned long long mult_mod(unsigned long long n, unsigned long long k,
+                            unsigned long long m) {
   unsigned long long addend, sum;
-  assert (m > 1);
-  if (k == 0) return 0;
-  addend = n % m; 
+  assert(m > 1);
+  if (k == 0)
+    return 0;
+  addend = n % m;
   sum = 0;
   while (k > 0) {
     if ((k % 2) == 1) {
-      sum = (sum + addend) % m; k = k - 1;
+      sum = (sum + addend) % m;
+      k = k - 1;
     }
-    addend = (addend + addend) % m; k = k / 2;
+    addend = (addend + addend) % m;
+    k = k / 2;
   }
   return sum;
 }
 
-unsigned long long smart_mult_mod (unsigned long long n, 
-                                   unsigned long long k, 
-                                   unsigned long long m) {
+unsigned long long smart_mult_mod(unsigned long long n, unsigned long long k,
+                                  unsigned long long m) {
   unsigned long long ullmax = ~0ull;
-  if (k == 0) return 0;
+  if (k == 0)
+    return 0;
   if ((ullmax / k) < n)
     return mult_mod(n, k, m);
   return (n * k) % m;
 }
 
-unsigned long long pow_mod (unsigned long long n, 
-                            unsigned long long k,
-                            unsigned long long m) {
+unsigned long long pow_mod(unsigned long long n, unsigned long long k,
+                           unsigned long long m) {
   unsigned long long mult, prod;
-  assert (m > 1);
-  if (k == 0) return 1;
-  mult = n % m; 
+  assert(m > 1);
+  if (k == 0)
+    return 1;
+  mult = n % m;
   prod = 1;
   while (k > 0) {
-    if ((k % 2) == 1) { 
-      prod = smart_mult_mod(prod, mult, m); k = k - 1; 
-    } 
-    mult = smart_mult_mod(mult, mult, m); k = k / 2;
+    if ((k % 2) == 1) {
+      prod = smart_mult_mod(prod, mult, m);
+      k = k - 1;
+    }
+    mult = smart_mult_mod(mult, mult, m);
+    k = k / 2;
   }
   return prod;
 }
 
 const int NUMLIM = 20;
 
-unsigned long long gcd(unsigned long long a,
-                       unsigned long long b) {
-  if (b > a) return gcd(b, a);
-  for(;;) {
+unsigned long long gcd(unsigned long long a, unsigned long long b) {
+  if (b > a)
+    return gcd(b, a);
+  for (;;) {
     unsigned long long q = a % b;
     if (q == 0)
       break;
@@ -62,7 +66,7 @@ unsigned long long gcd(unsigned long long a,
   return b;
 }
 
-int main () {
+int main() {
   int res, i;
   unsigned long long p, a;
   res = scanf("%llu", &p);
@@ -74,7 +78,7 @@ int main () {
   srand(time(NULL));
   for (i = 0; i < NUMLIM; ++i) {
     unsigned long long pmod;
-    do { 
+    do {
       a = rand();
     } while (gcd(a, p) != 1);
     pmod = pow_mod(a, p - 1, p);
@@ -87,4 +91,3 @@ int main () {
 
   printf("1");
 }
-

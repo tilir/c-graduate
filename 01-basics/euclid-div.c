@@ -6,7 +6,7 @@
 //
 //-----------------------------------------------------------------------------
 //
-// Euclid algorithm: variant 1. Find bugs in this code!
+// Euclid algorithm: variant 2. Proper support of signed integers.
 //
 //-----------------------------------------------------------------------------
 
@@ -14,10 +14,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int iabs(int x) { return (x < 0) ? -x : x; }
+
+// Euclidean division: a = qb + r, 0 <= r < |b|
+// C-style % operation: a == (a / b) * b + (a % b)
+// We need proper euclidean division here
+void eu_mod(int x, int y, int *pr) {
+  int r;
+  assert(y != 0);
+
+  r = x % y;
+  if (r < 0)
+    r += iabs(y);
+  *pr = r;
+}
+
 int gcd(int x, int y) {
   int q;
   assert(y != 0);
-  q = x % y;
+  eu_mod(x, y, &q);
   if (q == 0)
     return y;
   return gcd(y, q);
