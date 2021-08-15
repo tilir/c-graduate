@@ -19,4 +19,5 @@ int main() {
   p = a / b;
   q = a % b;
   printf("p = %d, q = %d\n", p, q);
+  return 0;
 }

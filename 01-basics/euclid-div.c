@@ -19,20 +19,19 @@ int iabs(int x) { return (x < 0) ? -x : x; }
 // Euclidean division: a = qb + r, 0 <= r < |b|
 // C-style % operation: a == (a / b) * b + (a % b)
 // We need proper euclidean division here
-void eu_mod(int x, int y, int *pr) {
+int eu_mod(int x, int y) {
   int r;
   assert(y != 0);
-
   r = x % y;
   if (r < 0)
     r += iabs(y);
-  *pr = r;
+  return r;
 }
 
 int gcd(int x, int y) {
   int q;
   assert(y != 0);
-  eu_mod(x, y, &q);
+  q = eu_mod(x, y);
   if (q == 0)
     return y;
   return gcd(y, q);
