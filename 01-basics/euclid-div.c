@@ -45,6 +45,6 @@ int main() {
     abort();
   }
   g = gcd(x, y);
-  printf("gcd(%d, %d) = %d\n", x, y, g);
+  printf("%d\n", g);
   return 0;
 }
