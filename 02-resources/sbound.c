@@ -1,17 +1,41 @@
-#include <assert.h>
-#include <stdio.h>
-#include <math.h>
+//-----------------------------------------------------------------------------
+//
+// Source code for MIPT course on informatics
+// Page with slides: http://cs.mipt.ru/wp/?page_id=7775
+// Licensed after GNU GPL v3
+//
+//-----------------------------------------------------------------------------
+//
+// Sieve bound for erathosphenes
+//
+//-----------------------------------------------------------------------------
 
-unsigned long long sieve_bound(unsigned num) {
+#include <assert.h>
+#include <limits.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+long sieve_bound(unsigned num) {
   assert(num > 20);
   double dnum = num;
   double dres = dnum * (log(dnum) + log(log(dnum)));
-  return (unsigned long long) round(dres);
+  if (dres > LONG_MAX) {
+    printf("You will be unable to allocate this size\n");
+    abort();
+  }
+  return (long)round(dres);
 }
 
-int
-main() {
-  printf("for 1000: %llu\n", sieve_bound(1000));
-  printf("for 1000000: %llu\n", sieve_bound(1000000));
+int main() {
+  int res;
+  unsigned num;
+  long bnd;
+  res = scanf("%d", &num);
+  if (res != 1 || num <= 20) {
+    printf("%s\n", "Wrong number");
+    abort();
+  }
+  bnd = sieve_bound(num);
+  printf("%ld\n", bnd);
 }
-
