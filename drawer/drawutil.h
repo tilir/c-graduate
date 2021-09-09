@@ -20,6 +20,7 @@ struct Surface;
 
 // basic drawing functions for surface
 void Surface_putPixel(struct Surface *s, int x, int y, unsigned color);
+void Surface_putLogPixel(struct Surface *s, double x, double y, unsigned color);
 void Surface_putRect(struct Surface *s, int x, int y, int szx, int szy,
                      unsigned color);
 void Surface_fillWith(struct Surface *s, unsigned color);

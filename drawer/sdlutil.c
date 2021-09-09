@@ -27,6 +27,25 @@ void Surface_putPixel(struct Surface *s, int x, int y, unsigned c) {
   SDL_RenderDrawPoint(s->ren, x, y);
 }
 
+static inline double clamp(double v, double lo, double hi) {
+  if (v < lo)
+    return lo;
+  if (v > hi)
+    return hi;
+  return v;
+}
+
+void Surface_putLogPixel(struct Surface *s, double x, double y,
+                         unsigned color) {
+  int width, height;
+  SDL_GetRendererOutputSize(s->ren, &width, &height);
+  double w = width, h = height;
+
+  int logx = clamp(rint((x + 1.0) * width / 2.0), 0.0, w);
+  int logy = clamp(rint((y + 1.0) * height / 2.0), 0.0, h);
+  Surface_putPixel(s, logx, logy, color);
+}
+
 void Surface_putRect(struct Surface *s, int x, int y, int szx, int szy,
                      unsigned c) {
   SDL_Rect Rect = {x, y, szx, szy};
