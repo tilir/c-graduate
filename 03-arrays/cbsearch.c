@@ -10,13 +10,8 @@ void *bsearch_(const void *key, const void *base, int num, int size, cmp_t cmp) 
 
   while (num > 0) {
     pivot = (const char *) base + (num / 2) * size;
-	result = cmp(key, (const void *) pivot);
-	if (result == 0) return (void *)pivot;
-	if (result > 0) {
-	  base = pivot + size; 
-	  num--;
-	}
-	num = num / 2;
+  	result = cmp(key, (const void *) pivot);
+    // TODO: your code here
   }
 
   return NULL;
