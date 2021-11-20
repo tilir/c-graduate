@@ -10,10 +10,11 @@ void copy_simple(char *dst, const char *src) {
 }
 
 void copy_really_stylish(char *dst, const char *src) {
-  while ((*dst++ = *src++) != '\0') {}
+  while ((*dst++ = *src++) != '\0') {
+  }
 }
 
-int main () {
+int main() {
   char hello[20] = "Hello, world!";
   char duplicate[20] = {0};
   char duplicate2[20] = {0};
@@ -24,4 +25,3 @@ int main () {
   copy_really_stylish(duplicate2, hello);
   printf("%s == %s\n", hello, duplicate2);
 }
-

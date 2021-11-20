@@ -6,7 +6,7 @@ struct costs {
   int addcost, removecost, replacecost;
 };
 
-int edistance (const char *fst, const char *snd, struct costs c) {
+int edistance(const char *fst, const char *snd, struct costs c) {
   // TODO: write code
 }
 
@@ -26,9 +26,7 @@ void genomtest() {
   printf("%d\n", edist);
 }
 
-int
-main () {
+int main() {
   spoontest();
   genomtest();
 }
-

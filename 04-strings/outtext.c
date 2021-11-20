@@ -1,6 +1,6 @@
 #include <errno.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv) {
   FILE *f;
@@ -12,16 +12,15 @@ int main(int argc, char **argv) {
   }
 
   f = fopen(argv[1], "r");
-  
+
   if (f == NULL) {
     perror("File open error:");
     return -2;
   }
 
-  while(fscanf(f, "%c", &c) == 1)
+  while (fscanf(f, "%c", &c) == 1)
     printf("%c", c);
   printf("\n");
 
   fclose(f);
 }
-

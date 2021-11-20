@@ -1,6 +1,6 @@
 #include <errno.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv) {
   FILE *f;
@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
   }
 
   f = fopen(argv[1], "w");
-  
+
   if (f == NULL) {
     perror("File open error:");
     return -2;
@@ -24,4 +24,3 @@ int main(int argc, char **argv) {
 
   fclose(f);
 }
-
