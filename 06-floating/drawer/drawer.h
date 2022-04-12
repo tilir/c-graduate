@@ -47,3 +47,5 @@ void ViewPort_dump(struct ViewPort *v, const char *name);
 typedef void (*callback_t)(struct Surface *, void *);
 
 struct ViewPort *ViewPort_query(int w, int h, callback_t c, void *state, bool resize);
+
+double clamp(double v, double lo, double hi);

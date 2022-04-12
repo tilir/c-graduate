@@ -1,3 +1,15 @@
+//-----------------------------------------------------------------------------
+//
+// Source code for MIPT course on informatics
+// Page with slides: http://cs.mipt.ru/wp/?page_id=7775
+// Licensed after GNU GPL v3
+//
+//-----------------------------------------------------------------------------
+//
+// trivial fopen example with error processing
+//
+//-----------------------------------------------------------------------------
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
