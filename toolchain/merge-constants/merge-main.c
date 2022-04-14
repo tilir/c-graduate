@@ -9,8 +9,11 @@
 // merge constants: main module
 //
 // try:
-// > gcc -O2 merge-foo.c merge-bar.c -o merged
-// > gcc -O2 -fno-merge-constants merge-foo.c merge-bar.c -o non-merged
+// > gcc -O2 merge-main.c merge-foo.c merge-bar.c -o merged
+// > gcc -O2 -fno-merge-constants merge-main.c merge-foo.c merge-bar.c 
+//       -o non-merged
+// > objdump -d --section=.rodata merged
+// > objdump -d --section=.rodata non-merged
 //
 //-----------------------------------------------------------------------------
 

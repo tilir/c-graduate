@@ -12,6 +12,6 @@
 
 #include <stdio.h>
 
-int __attribute__((constructor)) foo() { printf("Before main!\n"); }
+void __attribute__((constructor)) foo() { printf("Foo\n"); }
 
 int main() { printf("Main\n"); }
