@@ -1,0 +1,3 @@
+# copy this to .gdbinit
+set pagination off
+set disassembly-flavor intel
