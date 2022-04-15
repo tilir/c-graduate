@@ -8,6 +8,11 @@
 //
 // constructor demonstration (init section)
 //
+// try:
+// > gcc -O2 beforemain.c
+// > objdump -d -j .text ./a.out | grep foo
+// > objdump -d -j .init_array ./a.out
+//
 //-----------------------------------------------------------------------------
 
 #include <stdio.h>

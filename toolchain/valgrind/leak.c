@@ -6,17 +6,18 @@
 //
 //-----------------------------------------------------------------------------
 //
-// hidden visibility
+// valgrind simple leak example
 //
-// try:
-// > gcc -fPIC -shared -fvisibility=hidden huge-hidden.c -o libhuge-hidden.so
-// > nm -CD libhuge-hidden.so
+// gcc -O0 -g leak.c
+// valgrind ./a.out
 //
 //-----------------------------------------------------------------------------
 
-unsigned helper1(unsigned x) { return 0; }
-unsigned helper2(unsigned x) { return 1; }
+#include <stdlib.h>
 
-unsigned __attribute__((visibility("default"))) myfunc(unsigned n) {
-  return helper1(n) + helper2(n);
+char *__attribute__((noinline)) leak() {
+  char *ix = malloc(10);
+  return ix;
 }
+
+int main() { leak(); }

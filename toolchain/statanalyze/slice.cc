@@ -6,17 +6,30 @@
 //
 //-----------------------------------------------------------------------------
 //
-// hidden visibility
+// stat analyzer detecting slicing issue
 //
-// try:
-// > gcc -fPIC -shared -fvisibility=hidden huge-hidden.c -o libhuge-hidden.so
-// > nm -CD libhuge-hidden.so
+// clang-tidy --checks=*,-modernize-* slice.cc -- slice.cc
 //
 //-----------------------------------------------------------------------------
 
-unsigned helper1(unsigned x) { return 0; }
-unsigned helper2(unsigned x) { return 1; }
+#include <iostream>
 
-unsigned __attribute__((visibility("default"))) myfunc(unsigned n) {
-  return helper1(n) + helper2(n);
+using std::cout;
+using std::endl;
+
+struct B {
+  int a = 2;
+  virtual void f() { cout << "B::f " << a << endl; }
+};
+
+struct D : B {
+  int b = 3;
+  void f() override { cout << "D::f " << a << " " << b << endl; }
+};
+
+void use(B b) { b.f(); }
+
+int main() {
+  D d;
+  use(d);
 }

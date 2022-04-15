@@ -6,17 +6,19 @@
 //
 //-----------------------------------------------------------------------------
 //
-// hidden visibility
+// stat analyzer and ton of garbage
 //
-// try:
-// > gcc -fPIC -shared -fvisibility=hidden huge-hidden.c -o libhuge-hidden.so
-// > nm -CD libhuge-hidden.so
+// clang-tidy --checks=*,-modernize-* potential-outbound.cc
 //
 //-----------------------------------------------------------------------------
 
-unsigned helper1(unsigned x) { return 0; }
-unsigned helper2(unsigned x) { return 1; }
+#include <cassert>
 
-unsigned __attribute__((visibility("default"))) myfunc(unsigned n) {
-  return helper1(n) + helper2(n);
+int g[100];
+
+int foo(int *a, int len) {
+  assert((a != nullptr) && (len > 1));
+  return a[len / 2];
 }
+
+int main() { foo(g, 300); }
