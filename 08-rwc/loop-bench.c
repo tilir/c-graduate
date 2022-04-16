@@ -8,6 +8,12 @@
 //
 // basic benchmark: measuring only loop
 //
+// try:
+// cl /O2 /FA loop-bench.c
+// g++ -O2 -S -masm=intel loop-bench.c
+//
+// see simple-bench.h to understand how NOOPT works
+//
 //-----------------------------------------------------------------------------
 
 #include <stdio.h>

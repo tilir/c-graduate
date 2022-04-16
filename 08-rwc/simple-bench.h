@@ -12,6 +12,9 @@
 
 #pragma once
 
+#include <stdlib.h>
+#include <time.h>
+
 #ifdef _MSC_VER
 #include <intrin.h>  // for _ReadWriteBarrier
 #include <windows.h> // for GetSystemTimeAsFileTime
@@ -53,7 +56,7 @@ static inline void noopt(int value) {
 #define NOOPT(x) noopt(x)
 #else
 // things are much simpler for GCC and LLVM
-#define NOOPT(x) asm("" ::"r,i"(x));
+#define NOOPT(x) asm("" ::"r,i"(x))
 #endif
 
 #ifdef _MSC_VER
