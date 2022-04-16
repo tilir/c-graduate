@@ -1,65 +1,75 @@
+//-----------------------------------------------------------------------------
+//
+// Source code for MIPT course on informatics
+// Page with slides: http://cs.mipt.ru/wp/?page_id=7775
+// Licensed after GNU GPL v3
+//
+//-----------------------------------------------------------------------------
+//
+// benchmark: measuring naive multiplication
+//
+//-----------------------------------------------------------------------------
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-enum { BIG_AX = 2000, BIG_AY = 1600, BIG_BY = 1200 };
-// enum { BIG_AX = 1600, BIG_AY = 1200, BIG_BY = 800 };
+#include "simple-bench.h"
+
+enum { DEF_AX = 1600, DEF_AY = 1200, DEF_BY = 800 };
+
+typedef unsigned MatrixTy;
 
 // A[AX][AY] * B[AY][BY] = C[AX][BY]
-void matrix_mult(const int *A, const int *B, int *C, int AX, int AY, int BY) {
+void matrix_mult(const MatrixTy *A, const MatrixTy *B, MatrixTy *C, int AX,
+                 int AY, int BY) {
   assert(A != NULL && B != NULL && C != NULL);
   assert(AX > 0 && AY > 0 && BY > 0);
-  for(int i = 0; i < AX; i++)
-    for(int j = 0; j < BY; j++) {
+  for (int i = 0; i < AX; i++)
+    for (int j = 0; j < BY; j++) {
       C[i * BY + j] = 0;
-      // Multiply and accumulate the values  
+      // Multiply and accumulate the values
       // in the current row of A and column of B
-      for(int k = 0; k < AY; k++)
+      for (int k = 0; k < AY; k++)
         C[i * BY + j] += A[i * AY + k] * B[k * BY + j];
     }
 }
 
-// to exclude silly errors
-void smoketest() {
-  int a[3][2] = {{1, 2}, {3, 4}, {5, 6}};
-  int b[2][1] = {{1}, {2}};
-  int c[3][1];
-
-  matrix_mult(&a[0][0], &b[0][0], &c[0][0], 3, 2, 1);
-
-  assert(c[0][0] == 5);
-  assert(c[1][0] == 11);
-  assert(c[2][0] == 17);
-}
-
-void matrix_rand_init(int *arr, int sz) {
-  srand(time(NULL));
+void matrix_rand_init(MatrixTy *arr, int sz) {
   for (int i = 0; i < sz; ++i)
     arr[i] = (rand() % 20) - 10;
 }
 
-int
-main () {
-  clock_t start, fin;
-  double diff;
-  
-  smoketest();
-  int (*a)[BIG_AY] = (int (*)[BIG_AY]) malloc(BIG_AX * BIG_AY * sizeof(int));
-  int (*b)[BIG_BY] = (int (*)[BIG_BY]) malloc(BIG_AY * BIG_BY * sizeof(int)); 
-  int (*c)[BIG_BY] = (int (*)[BIG_BY]) malloc(BIG_AX * BIG_BY * sizeof(int));
-  
-  matrix_rand_init(&a[0][0], BIG_AX * BIG_AY);
-  matrix_rand_init(&b[0][0], BIG_AY * BIG_BY);
-  matrix_rand_init(&c[0][0], BIG_AX * BIG_BY);
-  
-  start = clock();
-  matrix_mult(&a[0][0], &b[0][0], &c[0][0], BIG_AX, BIG_AY, BIG_BY);
-  fin = clock();
-  
-  diff = (double)(fin - start) / CLOCKS_PER_SEC;
-  printf("Elapsed: %lg seconds\n", diff);
-  
+int main(int argc, char **argv) {
+  struct timespec time1, time2;
+  MatrixTy *a, *b, *c;
+  int ax = DEF_AX, ay = DEF_AY, by = DEF_BY;
+  srand(time(NULL));
+  printf("Hello from mult bench. Usage:\n%s [ax] [ay] [by]\n", argv[0]);
+
+  maybe_readopt(argc, argv, 1, &ax);
+  maybe_readopt(argc, argv, 2, &ay);
+  maybe_readopt(argc, argv, 3, &by);
+
+  if (ax <= 0 || ay <= 0 || by <= 0)
+    abort();
+
+  a = malloc(ax * ay * sizeof(MatrixTy));
+  b = malloc(ay * by * sizeof(MatrixTy));
+  c = malloc(ax * by * sizeof(MatrixTy));
+
+  matrix_rand_init(a, ax * ay);
+  matrix_rand_init(b, ay * by);
+  matrix_rand_init(a, ax * by);
+
+  printf("Measuring [%d x %d] * [%d x %d]\n", ax, ay, ay, by);
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+  matrix_mult(a, b, c, ax, ay, by);
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+  printf("Measured: %lf\n", diff(time1, time2));
+
   free(c);
   free(b);
   free(a);
