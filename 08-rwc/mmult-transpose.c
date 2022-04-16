@@ -73,9 +73,9 @@ int main(int argc, char **argv) {
   matrix_rand_init(a, ax * by);
 
   printf("Measuring [%d x %d] * [%d x %d]\n", ax, ay, ay, by);
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+  simple_gettime(&time1);
   matrix_mult_transpose(a, b, c, ax, ay, by);
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+  simple_gettime(&time2);
 
   printf("Measured: %lf\n", diff(time1, time2));
 
