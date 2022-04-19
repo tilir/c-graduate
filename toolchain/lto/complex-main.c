@@ -8,6 +8,9 @@
 //
 // LTO complex example, see also complex-part.c
 //
+// try:
+// > gcc -O2 complex-main.c complex-part.c -flto
+//
 //-----------------------------------------------------------------------------
 
 #include <stdio.h>

@@ -8,6 +8,9 @@
 //
 // LTO basic example, see also part.c
 //
+// try:
+// > gcc -O2 main.c part.c -flto
+//
 //-----------------------------------------------------------------------------
 
 #include <stdio.h>
