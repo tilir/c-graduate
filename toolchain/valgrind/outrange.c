@@ -11,6 +11,8 @@
 //
 // gcc -O0 -g outrange.c
 // valgrind ./a.out
+// gcc -O0 -g -DHEAP outrange.c
+// valgrind ./a.out
 //
 //-----------------------------------------------------------------------------
 

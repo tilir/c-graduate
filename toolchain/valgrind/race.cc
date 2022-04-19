@@ -6,19 +6,25 @@
 //
 //-----------------------------------------------------------------------------
 //
-// stat analyzer and ton of garbage
+// valgrind race condition example
 //
-// clang-tidy --checks=*,-modernize-* potential-outbound.cc
+// > g++ race.cc -pthread
+// > valgrind --tool=helgrind ./a.out
 //
 //-----------------------------------------------------------------------------
 
-#include <cassert>
+#include <iostream>
+#include <thread>
+int x = 0;
 
-int g[100];
-
-int foo(int *a, int len) {
-  assert((a != nullptr) && (len > 1));
-  return a[len / 2];
+void foo() {
+  auto t = std::thread([&] { ++x; });
+  t.detach();
+  ++x;
 }
 
-int main() { foo(g, 300); }
+int main() {
+  foo();
+  std::cout << x << std::endl;
+  return 0;
+}

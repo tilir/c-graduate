@@ -6,22 +6,22 @@
 //
 //-----------------------------------------------------------------------------
 //
-// stat analyzer detecting null pointer dereferencing with interesting trace
+// stat analyzer and ton of garbage
 //
-// clang-tidy --checks=*,-modernize-* potential-deref-2.cc
+// clang-tidy --checks=* potential-outbound.c -- potential-outbound.c
 //
 //-----------------------------------------------------------------------------
 
-#include <iostream>
+#include <assert.h>
+#include <stdlib.h>
 
-int foo(const int *x) { return *x; }
+enum { ARRSZ = 10, FOOARG = 30 };
 
-int main() {
-  int t = 2;
-  foo(&t);
-  int x;
-  std::cin >> x;
-  if (x < 3) {
-    foo(nullptr);
-  }
+int g[ARRSZ];
+
+int foo(int *a, int len) {
+  assert((a != NULL) && (len > 1));
+  return a[len / 2];
 }
+
+int main() { foo(g, FOOARG); }

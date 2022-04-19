@@ -6,18 +6,21 @@
 //
 //-----------------------------------------------------------------------------
 //
-// stat analyzer detecting nukk pointer dereferencing
+// stat analyzer detecting null pointer dereferencing with interesting trace
 //
-// clang-tidy potential-deref.c -- potential-deref.c
+// clang-tidy potential-deref-2.c -- potential-deref-2.c
 //
 //-----------------------------------------------------------------------------
 
-#include <stdlib.h>
+#include <stdio.h>
 
-int foo(int *x) { return *x; }
+int foo(const int *x) { return *x; }
 
 int main() {
-  int t = 2;
-  foo(&t);
-  foo(NULL);
+  int t = 2, x, res;
+  foo(&t);  
+  res = scanf("%d", &x);
+  if (res == 1 && x < 3) {
+    foo(NULL);
+  }
 }
