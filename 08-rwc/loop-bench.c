@@ -22,7 +22,7 @@
 
 #include "simple-bench.h"
 
-const int GIGAOPS = 1000000000;
+const int GIGAOPS = (1 << 30);
 
 int main(int argc, char **argv) {
   struct timespec time1, time2;
