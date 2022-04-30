@@ -67,9 +67,9 @@ void permute() {
   z3 = permute_zvalue(z0, z1); // equal to z0, as z0 is reverse
   assert(equal_zvalue(z0, z2));
   assert(equal_zvalue(z2, z3));
-  z2 = setr_zvalues(3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12);
-  z3 = set_zvalues(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
-  DUMP_ZREG(permute_zvalue(z2, z3));
+  z0 = set_zvalue(16);
+  z1 = set_zvalues(16, 16, 16, 16, 16, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+  assert(11 == first_equal_zvalue(z0, z1));
 }
 
 void rotate_shift() {
