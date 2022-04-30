@@ -61,11 +61,13 @@ enum {
 #define DUMP_XREG(R) print_xreg(stdout, #R, R)
 #define DUMP_YREG(R) print_yreg(stdout, #R, R)
 #define DUMP_ZREG(R) print_zreg(stdout, #R, R)
+#define DUMP_RZREG(R) print_rzreg(stdout, #R "rev", R)
 
 // dump functions
 static inline void print_xreg(FILE *f, const char *const pname, ri128 r);
 static inline void print_yreg(FILE *f, const char *const pname, ri256 r);
 static inline void print_zreg(FILE *f, const char *const pname, ri512 r);
+static inline void print_rzreg(FILE *f, const char *const pname, ri512 r);
 
 // sets single value to all register lanes
 static inline ri128 set_xvalue(int i) { return _mm_set1_epi32(i); }
@@ -104,9 +106,9 @@ static inline ri512 load_zvalue(void *addr);
 #define blend_zvalues(mask, src1, src2)                                        \
   _mm512_mask_blend_epi32(mask, src1, src2)
 
-#define permute_xvalues(idx, src) _mm_permutexvar_epi32(idx, src)
-#define permute_yvalues(idx, src) _mm256_permutexvar_epi32(idx, src)
-#define permute_zvalues(idx, src) _mm512_permutexvar_epi32(idx, src)
+#define permute_xvalue(idx, src) _mm_permutexvar_epi32(idx, src)
+#define permute_yvalue(idx, src) _mm256_permutexvar_epi32(idx, src)
+#define permute_zvalue(idx, src) _mm512_permutexvar_epi32(idx, src)
 
 // aggregate comparisons: results are 1 or 0
 static inline int less_xvalue(ri128 src1, ri128 src2);
@@ -163,6 +165,15 @@ void print_yreg(FILE *f, const char *const pname, ri256 r) {
 void print_zreg(FILE *f, const char *const pname, ri512 r) {
   int vals[16] __attribute__((aligned(64)));
   store_zvalue(vals, r);
+  print_iarray(f, pname, vals, 16);
+}
+
+void print_rzreg(FILE *f, const char *const pname, ri512 r) {
+  int vals[16] __attribute__((aligned(64)));
+  // inverse permutation
+  ri512 perm =
+      set_zvalues(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+  store_zvalue(vals, permute_zvalue(perm, r));
   print_iarray(f, pname, vals, 16);
 }
 
@@ -243,6 +254,27 @@ ri512 mask_load_zvalue(ri512 src, void *addr, m16 mask) {
 ri512 load_zvalue(void *addr) { return _mm512_load_epi32(addr); }
 
 // comparisons
+
+int less_xvalue(ri128 src1, ri128 src2) {
+  m8 mask = _mm_cmp_epi32_mask(src1, src2, _MM_CMPINT_NLE);
+  return (mask == 0);
+}
+
+int equal_xvalue(ri128 src1, ri128 src2) {
+  m8 mask = _mm_cmp_epi32_mask(src1, src2, _MM_CMPINT_NE);
+  return (mask == 0);
+}
+
+int less_yvalue(ri256 src1, ri256 src2) {
+  m8 mask = _mm256_cmp_epi32_mask(src1, src2, _MM_CMPINT_NLE);
+  return (mask == 0);
+}
+
+int equal_yvalue(ri256 src1, ri256 src2) {
+  m8 mask = _mm256_cmp_epi32_mask(src1, src2, _MM_CMPINT_NE);
+  return (mask == 0);
+}
+
 int less_zvalue(ri512 src1, ri512 src2) {
   m16 mask = _mm512_cmp_epi32_mask(src1, src2, _MM_CMPINT_NLE);
   return (mask == 0);
@@ -276,8 +308,8 @@ ri512 rotate_zvalue(ri512 r0, int amt) {
   N = (shift + 13) % 16;
   O = (shift + 14) % 16;
   P = (shift + 15) % 16;
-  idx = set_zvalues(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P);
-  return permute_zvalues(idx, r0);
+  idx = setr_zvalues(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P);
+  return permute_zvalue(idx, r0);
 }
 
 // negative amount is shift_right
@@ -287,12 +319,16 @@ ri512 shift_zvalue(ri512 r0, int amt) {
     return r0;
 
   if (amt < 0) {
-    shiftmask = (M16_ALLONES << (unsigned)(-amt)) & M16_ALLONES;
-    return blend_zvalues(shiftmask, set_zvalue(0), rotate_zvalue(r0, amt));
+    shiftmask = (M16_ALLONES << (unsigned)(16 + amt)) & M16_ALLONES;
+    ri512 rot = rotate_zvalue(r0, amt);
+    ri512 z = blend_zvalues(shiftmask, rot, set_zvalue(0));
+    return z;
   }
 
-  shiftmask = (M16_ALLONES << (unsigned)(16 - amt)) & M16_ALLONES;
-  return blend_zvalues(shiftmask, rotate_zvalue(r0, amt), set_zvalue(0));
+  shiftmask = (M16_ALLONES << (unsigned)amt) & M16_ALLONES;
+  ri512 rotp = rotate_zvalue(r0, amt);
+  ri512 zp = blend_zvalues(shiftmask, set_zvalue(0), rotp);
+  return zp;
 }
 
 // sorting
@@ -301,7 +337,7 @@ ri512 shift_zvalue(ri512 r0, int amt) {
 //                permutation is like 14, 15, 12, 13 ....
 //                outputs min(v0, v1) max(v0, v1) ....
 ri512 sort_pairwise(ri512 vals, ri512 perm, m32 mask) {
-  ri512 exch = permute_zvalues(perm, vals);
+  ri512 exch = permute_zvalue(perm, vals);
   ri512 vmin = min_zvalues(vals, exch);
   ri512 vmax = max_zvalues(vals, exch);
   return blend_zvalues(mask, vmin, vmax);
@@ -330,11 +366,8 @@ ri512 sort_two_lanes_of_8(ri512 vals) {
   perm5 = setr_zvalues(1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 13, 12, 15, 14);
   mask5 = make_bitmask(0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1);
 
-  DUMP_ZREG(vals);
   vals = sort_pairwise(vals, perm0, mask0);
-  DUMP_ZREG(vals);
   vals = sort_pairwise(vals, perm1, mask1);
-  DUMP_ZREG(vals);
   vals = sort_pairwise(vals, perm2, mask2);
   vals = sort_pairwise(vals, perm3, mask3);
   vals = sort_pairwise(vals, perm4, mask4);
