@@ -59,7 +59,7 @@ void store_and_load() {
 }
 
 void permute() {
-  ri512 z0, z1, z2, z3;
+  ri512 z0, z1, z2, z3, answ;
   printf("%s\n", "permute test");
   z0 = setr_zvalues(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
   z1 = setr_zvalues(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
@@ -70,6 +70,11 @@ void permute() {
   z0 = set_zvalue(16);
   z1 = set_zvalues(16, 16, 16, 16, 16, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
   assert(11 == first_equal_zvalue(z0, z1));
+  // permutation with loss of information
+  z0 = set_zvalues(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+  z1 = set_zvalues(0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1);
+  answ = set_zvalues(1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0);
+  assert(equal_zvalue(z1, answ));
 }
 
 void rotate_shift() {
