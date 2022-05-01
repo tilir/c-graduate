@@ -89,13 +89,16 @@ static inline void mask_store_xvalue(void *addr, m8 mask, ri128 val);
 static inline void store_xvalue(void *addr, ri128 val);
 static inline void mask_store_yvalue(void *addr, m16 mask, ri256 val);
 static inline void store_yvalue(void *addr, ri256 val);
+static inline void store_yvalue_unaligned(void *addr, ri256 val);
 static inline void mask_store_zvalue(void *addr, m32 mask, ri512 val);
 static inline void store_zvalue(void *addr, ri512 val);
+static inline void store_zvalue_unaligned(void *addr, ri512 val);
 
 static inline ri128 mask_load_xvalue(ri128 src, const void *addr, m8 mask);
 static inline ri128 load_xvalue(const void *addr);
 static inline ri256 mask_load_yvalue(ri256 src, const void *addr, m8 mask);
 static inline ri256 load_yvalue(const void *addr);
+static inline ri256 load_yvalue_unaligned(const void *addr);
 static inline ri512 mask_load_zvalue(ri512 src, const void *addr, m16 mask);
 static inline ri512 load_zvalue(const void *addr);
 static inline ri512 load_zvalue_unaligned(const void *addr);
@@ -119,6 +122,9 @@ static inline int equal_yvalue(ri256 src1, ri256 src2);
 static inline int less_zvalue(ri512 src1, ri512 src2);
 static inline int equal_zvalue(ri512 src1, ri512 src2);
 static inline int first_equal_zvalue(ri512 src1, ri512 src2);
+
+static inline m8 greater_yvalue_mask(ri256 src1, ri256 src2);
+#define greater_zvalue_mask _mm512_cmpgt_epi32_mask
 
 // rotations and shifts
 static inline ri512 rotate_zvalue(ri512 r0, int amt);
@@ -209,6 +215,10 @@ void store_yvalue(void *addr, ri256 val) {
 #endif
 }
 
+void store_yvalue_unaligned(void *addr, ri256 val) {
+  _mm256_storeu_si256(addr, val);
+}
+
 // addr shall be 64-byte aligned
 void mask_store_zvalue(void *addr, m32 mask, ri512 val) {
   _mm512_mask_store_epi32(addr, mask, val);
@@ -216,6 +226,10 @@ void mask_store_zvalue(void *addr, m32 mask, ri512 val) {
 
 // addr shall be 64-byte aligned
 void store_zvalue(void *addr, ri512 val) { _mm512_store_epi32(addr, val); }
+
+void store_zvalue_unaligned(void *addr, ri512 val) {
+  _mm512_storeu_si512(addr, val);
+}
 
 // addr shall be 16-byte aligned
 ri128 mask_load_xvalue(ri128 src, const void *addr, m8 mask) {
@@ -245,6 +259,10 @@ ri256 load_yvalue(const void *addr) {
   // gcc requires trickier way as well
   return mask_load_yvalue(_mm256_undefined_si256(), addr, M8_ALLONES);
 #endif
+}
+
+ri256 load_yvalue_unaligned(const void *addr) {
+  return _mm256_loadu_si256(addr);
 }
 
 // addr shall be 64-byte aligned
@@ -279,6 +297,13 @@ int less_yvalue(ri256 src1, ri256 src2) {
 int equal_yvalue(ri256 src1, ri256 src2) {
   m8 mask = _mm256_cmp_epi32_mask(src1, src2, _MM_CMPINT_NE);
   return (mask == 0);
+}
+
+m8 greater_yvalue_mask(ri256 src1, ri256 src2) {
+  m8 mask;
+  ri256 m = _mm256_cmpgt_epi32(src1, src2);
+  mask = _mm256_movemask_ps((rf256)m); // ugly hack
+  return mask;
 }
 
 int less_zvalue(ri512 src1, ri512 src2) {
