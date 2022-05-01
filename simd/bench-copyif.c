@@ -43,6 +43,14 @@ void precalc() {
     for (int i = 0; i < 16; i++)
       if (m >> i & 1)
         permutation[m][k++] = i;
+#ifdef VISUALIZE_PERM
+    if (m < 64) {
+      printf("%d: ", m);
+      for (int i = 0; i < 16; i++)
+        printf("%d ", permutation[m][i]);
+      printf("\n");
+    }
+#endif
   }
 }
 

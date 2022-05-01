@@ -125,6 +125,7 @@ static inline int first_equal_zvalue(ri512 src1, ri512 src2);
 
 static inline m8 greater_yvalue_mask(ri256 src1, ri256 src2);
 #define greater_zvalue_mask _mm512_cmpgt_epi32_mask
+#define greater_eq_zvalue_mask _mm512_cmpge_epi32_mask
 
 // rotations and shifts
 static inline ri512 rotate_zvalue(ri512 r0, int amt);
