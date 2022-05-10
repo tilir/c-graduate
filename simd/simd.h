@@ -130,6 +130,9 @@ static inline m8 greater_yvalue_mask(ri256 src1, ri256 src2);
 // rotations and shifts
 static inline ri512 rotate_zvalue(ri512 r0, int amt);
 static inline ri512 shift_zvalue(ri512 r0, int amt);
+static inline ri512 shift_carry_up_zvalues(ri512 lo, ri512 hi, int amt);
+static inline ri512 shift_carry_down_zvalues(ri512 lo, ri512 hi, int amt);
+static inline void shift_carry_down_inplace_zvalues(ri512 *lo, ri512 *hi, int amt);
 
 // arithmetics (mostly 1-to-1)
 #define add_zvalues(x, y) _mm512_add_epi32(x, y)
@@ -352,23 +355,44 @@ ri512 rotate_zvalue(ri512 r0, int amt) {
   return permute_zvalue(idx, r0);
 }
 
-// negative amount is shift_right
+// negative amount is shift_right (or down if you want)
+static inline int shiftmask16(int amt) {
+  if (amt > 0) 
+    return (M16_ALLONES << (unsigned)amt) & M16_ALLONES;
+  return ~(M16_ALLONES << (unsigned)(16 + amt)) & M16_ALLONES;
+}
+
 ri512 shift_zvalue(ri512 r0, int amt) {
-  m16 shiftmask;
+  ri512 rot, blend;
   if (amt == 0)
     return r0;
+  rot = rotate_zvalue(r0, amt);
+  blend = blend_zvalues(shiftmask16(amt), set_zvalue(0), rot);
+  return blend;
+}
 
-  if (amt < 0) {
-    shiftmask = (M16_ALLONES << (unsigned)(16 + amt)) & M16_ALLONES;
-    ri512 rot = rotate_zvalue(r0, amt);
-    ri512 z = blend_zvalues(shiftmask, rot, set_zvalue(0));
-    return z;
-  }
+static inline ri512 shift_carry_zvalues(ri512 lo, ri512 hi, int amt) {
+  assert(amt != 0);
+  ri512 carry = (amt > 0) ? lo : hi;
+  ri512 reg = (amt > 0) ? hi : lo;
+  ri512 carry_rot = rotate_zvalue(carry, amt);
+  ri512 reg_rot = rotate_zvalue(reg, amt);
+  return blend_zvalues(shiftmask16(amt), carry_rot, reg_rot);
+}
 
-  shiftmask = (M16_ALLONES << (unsigned)amt) & M16_ALLONES;
-  ri512 rotp = rotate_zvalue(r0, amt);
-  ri512 zp = blend_zvalues(shiftmask, set_zvalue(0), rotp);
-  return zp;
+ri512 shift_carry_up_zvalues(ri512 lo, ri512 hi, int amt) {
+  if (amt == 0) return hi;
+  return shift_carry_zvalues(lo, hi, amt);
+}
+
+ri512 shift_carry_down_zvalues(ri512 lo, ri512 hi, int amt) {
+  if (amt == 0) return lo;
+  return shift_carry_zvalues(lo, hi, -amt);
+}
+
+void shift_carry_down_inplace_zvalues(ri512 *lo, ri512 *hi, int amt) {
+  *lo = shift_carry_down_zvalues(*lo, *hi, amt);
+  *hi = shift_zvalue(*hi, -amt);
 }
 
 // sorting

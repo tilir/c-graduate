@@ -72,13 +72,14 @@ void permute() {
   assert(11 == first_equal_zvalue(z0, z1));
   // permutation with loss of information
   z0 = set_zvalues(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
-  z1 = set_zvalues(0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1);
+  z1 = setr_zvalues(0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1);
+  z1 = permute_zvalue(z1, z0);
   answ = set_zvalues(1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0);
   assert(equal_zvalue(z1, answ));
 }
 
 void rotate_shift() {
-  ri512 z0, z1, z2;
+  ri512 z0, z1, z2, lo, hi, up, down, anshi;
   printf("%s\n", "rotate test");
   z0 = set_zvalues(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
   z1 = rotate_zvalue(z0, 3);
@@ -93,6 +94,16 @@ void rotate_shift() {
   z2 = shift_zvalue(z0, -4);
   assert(equal_zvalue(
       z2, set_zvalues(0, 0, 0, 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4)));
+  lo = set_zvalues(15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+  hi = add_zvalues(lo, set_zvalue(16));
+  up = shift_carry_up_zvalues(lo, hi, 3); // 28, 27, ...., 16, 15, 14, 13
+  assert(equal_zvalue(up, add_zvalues(lo, set_zvalue(13))));
+  down = shift_carry_down_zvalues(lo, hi, 4); // 19, 18, 17, 16, 15, ..., 5, 4
+  assert(equal_zvalue(down, add_zvalues(lo, set_zvalue(4))));
+  shift_carry_down_inplace_zvalues(&lo, &hi, 4);
+  assert(equal_zvalue(lo, down));
+  anshi = set_zvalues(0, 0, 0, 0, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20);
+  assert(equal_zvalue(hi, anshi));
 }
 
 void arithmetics() {
