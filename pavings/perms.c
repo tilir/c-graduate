@@ -84,18 +84,18 @@ static void test2() {
   print_arr(arr, arr + 2);
 }
 
-static void test3() {
-  int arr[] = {1, 2, 3};
+static void test_multi() {
+  int arr[] = {1, 1, 2, 3};
   int k = 1;
-  printf("Test for 3 elements:\n");
+  printf("Test for multiset:\n");
 
   while (k == 1) {
-    print_arr(arr, arr + 3);
-    k = next_perm_of(arr, arr + 3);
+    print_arr(arr, arr + 4);
+    k = next_perm_of(arr, arr + 4);
   }
 
   printf("Restored array:\n");
-  print_arr(arr, arr + 3);
+  print_arr(arr, arr + 4);
 }
 
 static void test4() {
@@ -114,6 +114,6 @@ static void test4() {
 
 int main() {
   test2();
-  test3();
+  test_multi();
   test4();
 }

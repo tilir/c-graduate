@@ -1,0 +1,62 @@
+//------------------------------------------------------------------------------
+//
+// this file implements all mixed mode tuples
+//
+// Details may be found in Knuth, algorithm M from 7.2.1.1 (vol 4A)
+//
+//------------------------------------------------------------------------------
+//
+// This file is licensed after LGPL v3
+// Look at: https://www.gnu.org/licenses/lgpl-3.0.en.html for details
+//
+//------------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// input: array of tuple, array of borders N0, N1, ... Nj
+// modifies: tuple [first, last)
+// returns: 0 if results dropped back to orig, 1 if next tuple generated
+int next_mm_tuple_of(int *first, int *last, const int *bfirst) {
+  int j = last - first;
+  if (j < 1)
+    return 0;
+
+  // move values
+  while ((j > 0) && (first[j - 1] == bfirst[j - 1] - 1)) {
+    first[j - 1] = 0;
+    j = j - 1;
+  }
+
+  if (j == 0) {
+    // zero-out back again
+    for (int *p = first; p != last; ++p)
+      *p = 0;
+    return 0;
+  }
+
+  first[j - 1] += 1;
+  return 1;
+}
+
+static void print_arr(int *first, int *last) {
+  for (int *p = first; p != last; ++p)
+    printf("%d ", *p);
+  printf("\n");
+}
+
+static void test2134() {
+  int borders[] = {2, 1, 3, 4};
+  int arr[] = {0, 0, 0, 0};
+  int k = 1;
+
+  while (k == 1) {
+    print_arr(arr, arr + 4);
+    k = next_mm_tuple_of(arr, arr + 4, borders);
+  }
+
+  printf("Restored array:\n");
+  print_arr(arr, arr + 4);
+}
+
+int main() { test2134(); }
