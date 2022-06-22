@@ -34,6 +34,8 @@ static void reverse_subarr(int *first, int *last) {
 
 int next_perm_of(int *first, int *last) {
   int n = last - first;
+  if (n < 2)
+    return;
   assert(first && last && n > 1);
 
   // L2: is_sorted for permutation
@@ -62,58 +64,4 @@ int next_perm_of(int *first, int *last) {
 
   // if j was 0, wealready reverssed back
   return (j != -1);
-}
-
-static void print_arr(int *first, int *last) {
-  for (int *p = first; p != last; ++p)
-    printf("%d ", *p);
-  printf("\n");
-}
-
-static void test2() {
-  int arr[] = {1, 2};
-  int k = 1;
-  printf("Test for 2 elements:\n");
-
-  while (k == 1) {
-    print_arr(arr, arr + 2);
-    k = next_perm_of(arr, arr + 2);
-  }
-
-  printf("Restored array:\n");
-  print_arr(arr, arr + 2);
-}
-
-static void test_multi() {
-  int arr[] = {1, 1, 2, 3};
-  int k = 1;
-  printf("Test for multiset:\n");
-
-  while (k == 1) {
-    print_arr(arr, arr + 4);
-    k = next_perm_of(arr, arr + 4);
-  }
-
-  printf("Restored array:\n");
-  print_arr(arr, arr + 4);
-}
-
-static void test4() {
-  int arr[] = {1, 2, 3, 4};
-  int k = 1;
-  printf("Test for 4 elements:\n");
-
-  while (k == 1) {
-    print_arr(arr, arr + 4);
-    k = next_perm_of(arr, arr + 4);
-  }
-
-  printf("Restored array:\n");
-  print_arr(arr, arr + 4);
-}
-
-int main() {
-  test2();
-  test_multi();
-  test4();
 }

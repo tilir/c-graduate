@@ -11,15 +11,16 @@
 //
 //------------------------------------------------------------------------------
 
+#include "comb.h"
 #include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 // input: array of tuple, array of borders N0, N1, ... Nj
 // modifies: tuple [first, last)
 // returns: 0 if results dropped back to orig, 1 if next tuple generated
 int next_mm_tuple_of(int *first, int *last, const int *bfirst) {
   int j = last - first - 1;
+  if (j < 0)
+    return;
   assert(first && last && bfirst && j >= 0);
 
   // simplest case: just increase
@@ -43,25 +44,3 @@ int next_mm_tuple_of(int *first, int *last, const int *bfirst) {
   // not found: we already zeroed everything
   return 0;
 }
-
-static void print_arr(int *first, int *last) {
-  for (int *p = first; p != last; ++p)
-    printf("%d ", *p);
-  printf("\n");
-}
-
-static void test2134() {
-  int borders[] = {2, 1, 3, 4};
-  int arr[] = {0, 0, 0, 0};
-  int k = 1;
-
-  while (k == 1) {
-    print_arr(arr, arr + 4);
-    k = next_mm_tuple_of(arr, arr + 4, borders);
-  }
-
-  printf("Restored array:\n");
-  print_arr(arr, arr + 4);
-}
-
-int main() { test2134(); }
