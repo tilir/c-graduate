@@ -13,6 +13,7 @@
 //
 //------------------------------------------------------------------------------
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -33,35 +34,34 @@ static void reverse_subarr(int *first, int *last) {
 
 int next_perm_of(int *first, int *last) {
   int n = last - first;
-  if (n < 2)
-    return 0;
+  assert(first && last && n > 1);
 
-  // L2: adjacent find for permutation
+  // L2: is_sorted for permutation
+  // for 1 2 3 4 we see first inversion at (3 4)
+  // for 2 4 3 1 we see first inversion at (2 4)
+  // for 4 3 2 1 we see no inversion
   int j = n - 2;
   while (first[j] >= first[j + 1])
     j -= 1;
 
   // at this point j is the smallest subscript for which all a0..aj perms
   // were already visited
+  if (j != -1) {
+    // L3: find element to swap
+    int l = n - 1;
+    while (first[j] >= first[l])
+      l -= 1;
 
-  if (j == -1) {
-    // we are done, restoring order
-    reverse_subarr(first, last);
-    return 0;
+    // first[l] is the smallest element, greater, then first[j]
+    swap(first + j, first + l);
   }
 
-  // L3: find element to swap
-  int l = n - 1;
-  while (first[j] >= first[l])
-    l -= 1;
+  // reverse subarray
+  if (j < n - 2)
+    reverse_subarr(first + j + 1, last);
 
-  // al is the smallest element, greater, then aj
-  // before swap: a(j+1) >= ... >= a(l-1) >= al >= aj
-  swap(first + j, first + l);
-
-  // L4: reverse subarray a(j+1) .. an
-  reverse_subarr(first + j + 1, last);
-  return 1;
+  // if j was 0, wealready reverssed back
+  return (j != -1);
 }
 
 static void print_arr(int *first, int *last) {

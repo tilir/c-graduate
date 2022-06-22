@@ -11,6 +11,7 @@
 //
 //------------------------------------------------------------------------------
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -18,25 +19,29 @@
 // modifies: tuple [first, last)
 // returns: 0 if results dropped back to orig, 1 if next tuple generated
 int next_mm_tuple_of(int *first, int *last, const int *bfirst) {
-  int j = last - first;
-  if (j < 1)
-    return 0;
+  int j = last - first - 1;
+  assert(first && last && bfirst && j >= 0);
 
-  // move values
-  while ((j > 0) && (first[j - 1] == bfirst[j - 1] - 1)) {
-    first[j - 1] = 0;
+  // simplest case: just increase
+  if (first[j] < bfirst[j] - 1) {
+    first[j] += 1;
+    return 1;
+  }
+
+  // carry case: fining j to increase
+  while (j >= 0 && first[j] == bfirst[j] - 1) {
+    first[j] = 0;
     j = j - 1;
   }
 
-  if (j == 0) {
-    // zero-out back again
-    for (int *p = first; p != last; ++p)
-      *p = 0;
-    return 0;
+  // digit position found
+  if (j >= 0) {
+    first[j] += 1;
+    return 1;
   }
 
-  first[j - 1] += 1;
-  return 1;
+  // not found: we already zeroed everything
+  return 0;
 }
 
 static void print_arr(int *first, int *last) {
