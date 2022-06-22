@@ -2,7 +2,7 @@
 //
 // this file implements all mixed mode tuples
 //
-// Details may be found in Knuth, algorithm M from 7.2.1.1 (vol 4A)
+// Details may be found in Knuth, algorithm 7.2.1.1.M
 //
 //------------------------------------------------------------------------------
 //
@@ -11,8 +11,9 @@
 //
 //------------------------------------------------------------------------------
 
-#include "comb.h"
 #include <assert.h>
+
+#include "comb.h"
 
 // input: array of tuple, array of borders N0, N1, ... Nj
 // modifies: tuple [first, last)
@@ -20,7 +21,7 @@
 int next_mm_tuple_of(int *first, int *last, const int *bfirst) {
   int j = last - first - 1;
   if (j < 0)
-    return;
+    return 0;
   assert(first && last && bfirst && j >= 0);
 
   // simplest case: just increase

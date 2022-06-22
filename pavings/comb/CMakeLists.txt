@@ -12,7 +12,10 @@
 set(SOURCES
   perms.c
   mmtuple.c
+  mmtuple-loopless.c
   hind.c
+  gray-codes.c
+  gray-rho.c
 )
 
 add_library(comb ${SOURCES})

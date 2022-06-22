@@ -14,8 +14,8 @@
 //------------------------------------------------------------------------------
 
 #include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
+
+#include "comb.h"
 
 static void swap(int *p1, int *p2) {
   int t = *p1;
@@ -35,7 +35,7 @@ static void reverse_subarr(int *first, int *last) {
 int next_perm_of(int *first, int *last) {
   int n = last - first;
   if (n < 2)
-    return;
+    return 0;
   assert(first && last && n > 1);
 
   // L2: is_sorted for permutation

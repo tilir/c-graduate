@@ -13,6 +13,7 @@ set(APPS
   perm_app
   mmtuple_app
   hind_app
+  gray_app
 )
 
 foreach(APP ${APPS})
