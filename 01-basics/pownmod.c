@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-unsigned mult_mod(unsigned n, unsigned k, unsigned m) {
+unsigned pow_mod(unsigned n, unsigned k, unsigned m) {
   unsigned long long acc, prod;
   assert(m > 1);
   if (k == 0)
@@ -38,7 +38,7 @@ int main() {
     printf("%s\n", "Wrong input");
     abort();
   }
-  x = mult_mod(n, k, m);
+  x = pow_mod(n, k, m);
   printf("(%u ^ %u) mod %u = %u\n", n, k, m, x);
   return 0;
 }
