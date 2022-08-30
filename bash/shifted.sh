@@ -8,12 +8,18 @@
 #
 #------------------------------------------------------------------------------
 #
-# Command-line arguments in bash
+# shifting and arithmetical substitution in bash
 #
 # Try:
-# $ ./third.sh myfolder
+# $ ./shifted.sh carl clara 'john smith' "martin luther king"
 #
 #------------------------------------------------------------------------------
 
-echo "param 0 is: $0"
-echo "param 1 is: $1"
+i=1;
+j=$#;
+while [ $i -le $j ] 
+do
+  echo "Param $i: $1";
+  i=$((i + 1));
+  shift 1;
+done

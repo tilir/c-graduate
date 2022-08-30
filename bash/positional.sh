@@ -11,9 +11,20 @@
 # Command-line arguments in bash
 #
 # Try:
-# $ ./third.sh myfolder
+# $ ./positional.sh -b 10 -f myfolder
 #
 #------------------------------------------------------------------------------
 
-echo "param 0 is: $0"
-echo "param 1 is: $1"
+unset border
+unset folder
+
+while getopts b:f: flag
+do
+  case "${flag}" in
+    b) border=${OPTARG};;    
+    f) folder=${OPTARG};;
+  esac
+done
+
+echo "folder is $folder"
+echo "border is $border"
