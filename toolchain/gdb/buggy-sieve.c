@@ -8,6 +8,11 @@
 //
 // Simple segfault example to demonstrate how gdb and valgrind helps us
 //
+// Try:
+// > gcc -g buggy-sieve.c -lm
+// > a.out
+// > valgrind ./a.out
+//
 //-----------------------------------------------------------------------------
 
 #include <assert.h>
@@ -35,15 +40,13 @@ int nth_prime(struct sieve_t *s, int N);
 int main() {
   int n, outp;
   int res;
-  struct sieve_t *s;
+  struct sieve_t sieve;
 
   res = scanf("%d", &n);
-  assert(res == 1);
-
-  struct sieve_t sieve;
+  assert(res == 1);  
   
   sieve.n = sieve_bound(n);
-  sieve.s = (char *)calloc(s->n, sizeof(char));
+  sieve.s = (char *)calloc(sieve.n, sizeof(char));
   assert(sieve.s != NULL);
 
   fill_sieve(&sieve);

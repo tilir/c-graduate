@@ -61,7 +61,7 @@ void print_arr(item *a, int n) {
     printf("%d: %s\n", a[i].key, a[i].data);
 }
 
-int main(void) {
+int main() {
   print_arr(array, 5);
   sort(array, 5);
   printf("\nAfter sort:\n");
