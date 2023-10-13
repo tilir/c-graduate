@@ -1,0 +1,8 @@
+threemem.c
+stackshow.c
+lifetime.c
+heapalloc.c
+memleak.c
+heapexhaust.c
+stackexhaust.c
+staticvars.c
