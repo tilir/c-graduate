@@ -7,6 +7,7 @@
 //-----------------------------------------------------------------------------
 //
 // main module for ABI demonstrations (see also fact.c)
+// gcc -O2 -masm=intel inlasm.c fact.c
 //
 //-----------------------------------------------------------------------------
 
@@ -15,12 +16,19 @@
 int fact(int x);
 int y = 5;
 
+int myadd(int x, int y) {
+  int res = x;
+  asm ("add %0, %1":"+r"(res):"r"(y));
+  return res;
+}
+
 int main() {
-  int f;
-  f = fact(y);
-  // asm("mov edi, %0"::"r"(y));
-  // asm("call fact":::"eax");
-  // asm("call fact\n\tmov %0, eax":"=r"(f)::"eax");
-  printf("%d\n", f);
+  int res;
+  printf("%d\n", myadd(2, 3));
+  // res = fact(y);
+  asm("mov edi, %1\n"
+      "\tcall fact\n"
+      "\tmov %0, eax":"=r"(res):"r"(y):"eax");
+  printf("%d\n", res);
 }
 
