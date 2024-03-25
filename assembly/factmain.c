@@ -12,15 +12,17 @@
 
 #include <stdio.h>
 
+int fact(int x);
+
+#if 0
 int fact(int x) {
   if (x < 2) return x;
   return fact(x - 1) * x;
 }
-
-int y = 5;
+#endif
 
 int main() {
-  int f = fact(y);
+  int f = fact(5);
   printf("%d\n", f);
 }
 
