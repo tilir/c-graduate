@@ -26,17 +26,21 @@ const int GIGAOPS = (1 << 30);
 
 int main(int argc, char **argv) {
   struct timespec time1, time2;
-  int i, e = GIGAOPS;
+  int i, j, e = GIGAOPS, e2 = 1;
 
   printf("Hello from loop bench. Usage:\n%s [size]\n", argv[0]);
   maybe_readopt(argc, argv, 1, &e);
-  if (e < 0)
+  maybe_readopt(argc, argv, 2, &e2);
+  if (e < 0 || e2 < 0)
     abort();
 
   printf("Measuring %d iterations\n", e);
   simple_gettime(&time1);
   for (i = 0; i < e; ++i) {
     NOOPT(i);
+    for (j = 0; j < e2; ++j) {
+      NOOPT(j);
+    }
   }
   simple_gettime(&time2);
 

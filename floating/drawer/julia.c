@@ -14,6 +14,7 @@
 //          0.3 0.7 awesome
 //
 // cl /EHsc /O2 /std:c11 julia.c sdlutil.c /Fe:julia /link SDL2.lib shell32.lib
+// gcc -O2 julia.c sdlutil.c -lm -lSDL2
 //
 //-----------------------------------------------------------------------------
 
@@ -98,8 +99,8 @@ main(int argc, char **argv)
     double re = _wtof(argv[1]);
     double im = _wtof(argv[2]);
 #else
-    double re = std::atof(argv[1]);
-    double im = std::atof(argv[2]);
+    double re = atof(argv[1]);
+    double im = atof(argv[2]);
 #endif
     c.re = re;
     c.im = im;
@@ -110,7 +111,6 @@ main(int argc, char **argv)
   double argmul = 1.0;
   double sz = 2.0;
   bool pause = false;
-  int dumpnum = 0;
   struct julia_data jd = {&c, &center, &sz};
   struct ViewPort *v = ViewPort_query(def_xsize, def_ysize, draw_julia, &jd, true);
   

@@ -33,7 +33,7 @@ double measure(int *arr, int len) {
     for (j = 0; j < len; ++j) {
       NOOPT(j);
       if (arr[j] > 128) {
-        sum = arr[j];
+        sum += arr[j];
         NOOPT(sum);
       }
     }

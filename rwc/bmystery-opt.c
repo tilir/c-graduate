@@ -31,7 +31,7 @@ double measure(int *arr, int len) {
     for (j = 0; j < len; ++j) {
       NOOPT(j);
       int tmp = (arr[j] > 128) ? 1 : 0;
-      sum = arr[j] * tmp; // moved to data-flow
+      sum += arr[j] * tmp; // moved to data-flow
       NOOPT(sum);
     }
   }

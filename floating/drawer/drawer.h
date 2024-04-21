@@ -47,5 +47,14 @@ void ViewPort_dump(struct ViewPort *v, const char *name);
 typedef void (*callback_t)(struct Surface *, void *);
 
 struct ViewPort *ViewPort_query(int w, int h, callback_t c, void *state, bool resize);
+void ViewPort_destroy(struct ViewPort *v);
 
-double clamp(double v, double lo, double hi);
+static double max(double x, double y) {
+  return (x > y) ? x : y;
+}
+
+static double clamp(double v, double lo, double hi) {
+  if (v < lo) return lo;
+  if (v > hi) return hi;
+  return v;
+}
