@@ -44,7 +44,10 @@ int main(int argc, char **argv) {
   int ax = DEF_AX, ay = DEF_AY, by = DEF_BY;
   double elapsed;
   srand(time(NULL));
+
+#ifndef QUIET
   printf("Hello from mult bench. Usage:\n%s [ax] [ay] [by]\n", argv[0]);
+#endif
 
   maybe_readopt(argc, argv, 1, &ax);
   maybe_readopt(argc, argv, 2, &ay);
@@ -61,7 +64,9 @@ int main(int argc, char **argv) {
   matrix_rand_init(b, ay * by);
   matrix_rand_init(a, ax * by);
 
+#ifndef QUIET
   printf("Measuring [%d x %d] * [%d x %d]\n", ax, ay, ay, by);
+#endif
   simple_gettime(&time1);
   matrix_mult_cblas(a, b, c, ax, ay, by);
   simple_gettime(&time2);
