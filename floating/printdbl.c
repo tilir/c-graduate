@@ -10,4 +10,3 @@ int main() {
   printf("%%20lf  : %20lf\n", d2);
   printf("%%20.5lf: %20.5lf\n", d2);
 }
-

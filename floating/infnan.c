@@ -10,4 +10,3 @@ int main() {
   double infdzero = infd * 0.0;
   printf("d: %le\tinfd: %le\tinfdzero: %le\n", d, infd, infdzero);
 }
-

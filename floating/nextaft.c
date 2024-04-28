@@ -7,7 +7,7 @@
 
 int main() {
   unsigned u, res, v;
-  float f, d, n; 
+  float f, d, n;
 
   fesetround(FE_DOWNWARD);
 
@@ -23,4 +23,3 @@ int main() {
   printf("%x\n", u);
   printf("%#08x\n", v);
 }
-

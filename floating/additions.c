@@ -17,4 +17,3 @@ int main() {
   cosval = cos(1.0);
   printf("True result: %.15lf\n", cosval);
 }
-

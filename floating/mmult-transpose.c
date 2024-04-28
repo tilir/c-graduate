@@ -19,7 +19,8 @@
 
 enum { DEF_AX = 1600, DEF_AY = 1200, DEF_BY = 800 };
 
-void matrix_mult_transpose(const double *A, const double *B, double *C, int AX, int AY, int BY) {
+void matrix_mult_transpose(const double *A, const double *B, double *C, int AX,
+                           int AY, int BY) {
   double *tmp = (double *)malloc(BY * AY * sizeof(double));
 
   assert(A != NULL && B != NULL && C != NULL && tmp != NULL);
@@ -78,7 +79,7 @@ int main(int argc, char **argv) {
   simple_gettime(&time1);
   matrix_mult_transpose(a, b, c, ax, ay, by);
   simple_gettime(&time2);
-  
+
   elapsed = diff(time1, time2);
   printf("%d %lf\n", ax, elapsed);
 

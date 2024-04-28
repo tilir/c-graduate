@@ -5,20 +5,20 @@
 // result:
 // {{6, 2, 3, 2}, {14, 4, 7, 6}, {22, 6, 11, 10}}
 
+#include <cblas.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <cblas.h>
 
 int AX = 3;
 int AY = 2;
 int BY = 4;
 
 // A row major and have 3 rows 2 columns, i.e. 3 * 2
-double A[3 * 2] = { 1, 2, 3, 4, 5, 6 };
+double A[3 * 2] = {1, 2, 3, 4, 5, 6};
 
 // B row major and have 2 rows 4 columns, i.e. 2 * 4
-double B[2 * 4] = { 2, 0, 1, 2, 2, 1, 1, 0};
+double B[2 * 4] = {2, 0, 1, 2, 2, 1, 1, 0};
 
 // C row major and have 3 rows, 4 columns, i.e. 3 * 4
 double C[3 * 4] = {0};
@@ -44,7 +44,8 @@ int main() {
     printf("\n");
   }
 
-  cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, AX, BY, AY, 1.0, A, AY, B, BY, 0.0, C, BY);
+  cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, AX, BY, AY, 1.0, A, AY,
+              B, BY, 0.0, C, BY);
 
   printf("-- A * B --\n");
 
@@ -66,4 +67,3 @@ int main() {
   if (!failed)
     printf("Test passed!\n");
 }
-

@@ -22,4 +22,3 @@ int main() {
   printf("feps: %.8f\tfenext: %.8f\n", feps, fenext);
   printf("d: %16.0lf\tnextd: %16.0lf\n", d, nextd);
 }
-
