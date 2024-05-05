@@ -7,6 +7,8 @@
 //-----------------------------------------------------------------------------
 //
 // SDL: triangle
+// gcc -O2 sdl_texture.c -lSDL2
+// cl /O2 /std:c11 sdl_triangle.c /link SDL2.lib
 //
 //-----------------------------------------------------------------------------
 
@@ -19,24 +21,28 @@
 
 #include <SDL2/SDL.h>
 
+#if defined(_WIN32) || defined(WIN32)
+#include <windows.h>
+#endif
+
 struct ViewPort {
   int width, height;
   SDL_Window *screen;
   SDL_Renderer *ren;
 };
 
-void printinfo(int num, const SDL_RendererInfo *nfo) {
-  printf("\n---\n");
-  printf("Number: %d\n", num);
-  printf("Name: %s\n", nfo->name);
-  printf("SW: %x, ACC: %x, VSYNC: %x, TEXTURE: %x\n",
-         nfo->flags & SDL_RENDERER_SOFTWARE,
-         nfo->flags & SDL_RENDERER_ACCELERATED,
-         nfo->flags & SDL_RENDERER_PRESENTVSYNC,
-         nfo->flags & SDL_RENDERER_TARGETTEXTURE);
+void printinfo(FILE *stream, int num, const SDL_RendererInfo *nfo) {
+  fprintf(stream, "\n---\n");
+  fprintf(stream, "Number: %d\n", num);
+  fprintf(stream, "Name: %s\n", nfo->name);
+  fprintf(stream, "SW: %x, ACC: %x, VSYNC: %x, TEXTURE: %x\n",
+          nfo->flags & SDL_RENDERER_SOFTWARE,
+          nfo->flags & SDL_RENDERER_ACCELERATED,
+          nfo->flags & SDL_RENDERER_PRESENTVSYNC,
+          nfo->flags & SDL_RENDERER_TARGETTEXTURE);
 }
 
-void driversinfo() {
+void driversinfo(FILE *stream) {
   int ndrivers = SDL_GetNumRenderDrivers();
   if (ndrivers < 0)
     ERR(SDL_GetNumRenderDrivers);
@@ -47,7 +53,7 @@ void driversinfo() {
     res = SDL_GetRenderDriverInfo(i, &nfo);
     if (res < 0)
       ERR(SDL_GetRenderDriverInfo);
-    printinfo(i, &nfo);
+    printinfo(stream, i, &nfo);
   }
 }
 
@@ -66,10 +72,15 @@ void renderTriangle(SDL_Renderer *ren) {
   SDL_RenderGeometry(ren, NULL, vertices, 3, NULL, 0);
 }
 
+#if defined(_WIN32) || defined(WIN32)
+int WinMain(HINSTANCE h, HINSTANCE g, LPSTR s, int n) {
+#else
 int main() {
+#endif
   struct ViewPort v;
   SDL_RendererInfo nfo;
   int res;
+  FILE *stream = fopen("device.log", "w");
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
     ERR(SDL_Init, true);
@@ -85,19 +96,19 @@ int main() {
   if (!v.screen)
     ERR(SDL_CreateWindow, true);
 
-  driversinfo();
+  driversinfo(stream);
 
   v.ren = SDL_CreateRenderer(
       v.screen, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   if (!v.ren)
     ERR(SDL_CreateRenderer, true);
 
-  printf("\n[Selected]\n");
+  fprintf(stream, "\n[Selected]\n");
   res = SDL_GetRendererInfo(v.ren, &nfo);
   if (res != 0)
     ERR(SDL_GetRendererInfo);
   else
-    printinfo(-1, &nfo);
+    printinfo(stream, -1, &nfo);
 
   for (;;) {
     int pending;
@@ -109,6 +120,7 @@ int main() {
     SDL_RenderPresent(v.ren);
   }
 
+  fclose(stream);
   SDL_DestroyRenderer(v.ren);
   SDL_DestroyWindow(v.screen);
   exit(0);

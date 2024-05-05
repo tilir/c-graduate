@@ -10,6 +10,8 @@
 //
 //-----------------------------------------------------------------------------
 
+#pragma once
+
 #define ERR_1(S)                                                               \
   fprintf(stderr, "[%s:%d] %s error: %s\n", __FILE__, __LINE__, #S,            \
           SDL_GetError());
