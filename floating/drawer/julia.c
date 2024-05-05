@@ -14,11 +14,12 @@
 //          0.3 0.7 awesome
 //
 // cl /EHsc /O2 /std:c11 julia.c sdlutil.c /Fe:julia /link SDL2.lib shell32.lib
-// gcc -O2 julia.c sdlutil.c -lm -lSDL2
+// gcc -O2 -flto -ffast-math newtons.c sdlutil.c -lm -lSDL2
 //
 //-----------------------------------------------------------------------------
 
 #include <assert.h>
+#include <complex.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -30,7 +31,6 @@
 #endif
 
 #include "drawer.h"
-#include "cmplx.h"
 
 const int def_bigsize = 1000;
 const int def_xsize = 1024;
@@ -41,18 +41,28 @@ const unsigned maxiter = 50;
 const double ARGSTEP = 0.01;
 
 struct julia_data {
-  struct cmplx *pc; 
-  struct cmplx *pcenter;
+  complex double *pc; 
+  complex double *pcenter;
   double *psz;
 };
+
+static complex double next_newton(complex double z) {
+  complex double numerator = z * z * z - 1;
+  complex double denominator = 3 * z * z;
+  return z - numerator / denominator;
+}
+
+static complex double next(complex double z, complex double c) {
+  return z * z + c;
+}
 
 static void draw_julia(struct Surface *s, void *data) {  
   const unsigned char clblue = 0xaa;
   const unsigned cmod = 8;
 
   struct julia_data *jd = (struct julia_data *) data;
-  struct cmplx c = *jd->pc;
-  struct cmplx center = *jd->pcenter;
+  complex double c = *jd->pc;
+  complex double center = *jd->pcenter;
   double sz = *jd->psz;
 
   int xsize = Surface_w(s);
@@ -62,15 +72,15 @@ static void draw_julia(struct Surface *s, void *data) {
     for (int iy = -ysize / 2; iy < ysize / 2; iy += 1) {
       double x = 2.0 * sz * ix / def_bigsize;
       double y = 2.0 * sz * iy / def_bigsize;
-      struct cmplx z = { center.re + x, center.im + y };
+      complex double z = CMPLX(creal(center) + x, cimag(center) + y);
       unsigned cl = buildcolor(0, 0, 0, clblue);
 
-      for (unsigned i = 0; i < maxiter; ++i) {
-        if (sqrt(z.re * z.re + z.im * z.im) > max(2.0 * sz, 4.0)) {
+      for (unsigned i = 0; i < maxiter; ++i) { 
+        if (cabs(z) > max(2.0 * sz, 4.0)) {
           cl = buildcolor(0, (i * cmod) & 0xFF, (i * cmod) & 0xFF, clblue);
           break;
         }
-        z = cmplx_add(cmplx_mul(z, z), c);
+        z = next(z, c);
       }
 
       Surface_putpixel(s, ix + (xsize / 2), iy + (ysize / 2), cl);
@@ -84,8 +94,8 @@ WinMain(HINSTANCE h, HINSTANCE g, LPSTR s, int n)
 main(int argc, char **argv)
 #endif
 {
-  struct cmplx c = {-0.7, 0.0};
-  struct cmplx center = {0.0, 0.0};
+  complex double c = CMPLX(-0.7, 0.0);
+  complex double center = CMPLX(0.0, 0.0);
   clock_t start_phase = clock();
 
 #if defined(_WIN32) || defined(WIN32)
@@ -102,12 +112,11 @@ main(int argc, char **argv)
     double re = atof(argv[1]);
     double im = atof(argv[2]);
 #endif
-    c.re = re;
-    c.im = im;
+    c = CMPLX(re, im);
   }
 
-  double abs = sqrt(c.re * c.re + c.im * c.im);
-  double arg = acos(c.re / abs);
+  double abs = cabs(c);
+  double arg = acos(creal(c) / abs);
   double argmul = 1.0;
   double sz = 2.0;
   bool pause = false;
@@ -123,8 +132,7 @@ main(int argc, char **argv)
     
     if (!pause)
       arg += argmul * dphase;
-    c.re = abs * cos(arg);
-    c.im = abs * sin(arg);
+    c = CMPLX(abs * cos(arg), abs * sin(arg));
   }
 
   ViewPort_destroy(v);
