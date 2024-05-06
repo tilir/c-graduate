@@ -5,7 +5,7 @@
 // Licensed after GNU GPL v3
 //
 //-----------------------------------------------------------------------------
-// 
+//
 // Julia set example
 //
 // default is -7.0 0.0
@@ -13,8 +13,8 @@
 //          -0.9 0.2 is equally well
 //          0.3 0.7 awesome
 //
-// cl /EHsc /O2 /std:c11 julia.c sdlutil.c /Fe:julia /link SDL2.lib shell32.lib
-// gcc -O2 -flto -ffast-math newtons.c sdlutil.c -lm -lSDL2
+// cl /O2 /std:c11 julia.c sdlutil.c /Fe:julia /link SDL2.lib
+// gcc -O2 -flto -ffast-math julia.c sdlutil.c -lm -lSDL2
 //
 //-----------------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ const unsigned maxiter = 50;
 const double ARGSTEP = 0.01;
 
 struct julia_data {
-  complex double *pc; 
+  complex double *pc;
   complex double *pcenter;
   double *psz;
 };
@@ -56,11 +56,11 @@ static complex double next(complex double z, complex double c) {
   return z * z + c;
 }
 
-static void draw_julia(struct Surface *s, void *data) {  
+static void draw_julia(struct Surface *s, void *data) {
   const unsigned char clblue = 0xaa;
   const unsigned cmod = 8;
 
-  struct julia_data *jd = (struct julia_data *) data;
+  struct julia_data *jd = (struct julia_data *)data;
   complex double c = *jd->pc;
   complex double center = *jd->pcenter;
   double sz = *jd->psz;
@@ -75,7 +75,7 @@ static void draw_julia(struct Surface *s, void *data) {
       complex double z = CMPLX(creal(center) + x, cimag(center) + y);
       unsigned cl = buildcolor(0, 0, 0, clblue);
 
-      for (unsigned i = 0; i < maxiter; ++i) { 
+      for (unsigned i = 0; i < maxiter; ++i) {
         if (cabs(z) > max(2.0 * sz, 4.0)) {
           cl = buildcolor(0, (i * cmod) & 0xFF, (i * cmod) & 0xFF, clblue);
           break;
@@ -121,15 +121,16 @@ main(int argc, char **argv)
   double sz = 2.0;
   bool pause = false;
   struct julia_data jd = {&c, &center, &sz};
-  struct ViewPort *v = ViewPort_query(def_xsize, def_ysize, draw_julia, &jd, true);
-  
+  struct ViewPort *v =
+      ViewPort_query(def_xsize, def_ysize, draw_julia, &jd, true);
+
   while (ViewPort_poll(v) == PROCEED) {
     const double SPEEDUP = 0.3;
     clock_t phase = clock();
     double dph = phase;
     double dphase = SPEEDUP * ((dph - start_phase) / CLOCKS_PER_SEC);
     start_phase = phase;
-    
+
     if (!pause)
       arg += argmul * dphase;
     c = CMPLX(abs * cos(arg), abs * sin(arg));
