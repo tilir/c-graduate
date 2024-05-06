@@ -8,6 +8,7 @@
 //
 // SDL: texture and some animation
 // gcc -O2 sdl_keydown.c -lSDL2 -lSDL2_image
+// cl /O2 /std:c11 sdl_keydown.c /link SDL2.lib SDL2_image.lib
 //
 //-----------------------------------------------------------------------------
 
@@ -20,6 +21,10 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+
+#if defined(_WIN32) || defined(WIN32)
+#include <windows.h>
+#endif
 
 struct ViewPort {
   int width, height;
@@ -58,7 +63,11 @@ void renderTexture(SDL_Renderer *ren, SDL_Texture *tex, double x, double y) {
   SDL_RenderCopy(ren, tex, NULL, &dst);
 }
 
+#if defined(_WIN32) || defined(WIN32)
+int WinMain(HINSTANCE h, HINSTANCE g, LPSTR s, int n) {
+#else
 int main() {
+#endif
   struct ViewPort v;
   SDL_RendererInfo nfo;
   int res;
@@ -78,7 +87,7 @@ int main() {
 
   atexit(SDL_Quit);
 
-  v.screen = SDL_CreateWindow("First SDL texture", SDL_WINDOWPOS_UNDEFINED,
+  v.screen = SDL_CreateWindow("SDL working with keys", SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED, v.width, v.height,
                               SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
   if (!v.screen)

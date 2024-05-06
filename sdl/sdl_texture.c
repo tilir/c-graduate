@@ -8,6 +8,7 @@
 //
 // SDL: texture
 // gcc -O2 sdl_texture.c -lSDL2 -lSDL2_image
+// cl /O2 /std:c11 sdl_texture.c /link SDL2.lib SDL2_image.lib
 //
 //-----------------------------------------------------------------------------
 
@@ -20,6 +21,10 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+
+#if defined(_WIN32) || defined(WIN32)
+#include <windows.h>
+#endif
 
 struct ViewPort {
   int width, height;
@@ -34,7 +39,11 @@ void renderTexture(SDL_Renderer *ren, SDL_Texture *tex) {
   SDL_RenderCopy(ren, tex, NULL, &dst);
 }
 
+#if defined(_WIN32) || defined(WIN32)
+int WinMain(HINSTANCE h, HINSTANCE g, LPSTR s, int n) {
+#else
 int main() {
+#endif
   struct ViewPort v;
   SDL_RendererInfo nfo;
   int res;
