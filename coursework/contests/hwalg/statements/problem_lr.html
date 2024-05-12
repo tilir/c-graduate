@@ -1,0 +1,29 @@
+<head><h3>Problem LR &mdash; разворот списка</h3></head>
+<body>
+<p>Заранее задан (определять его не надо) тип структуры для односвязного списка</p>
+<pre>
+struct node_t {
+  struct node_t *next;
+  int data;
+};
+</pre>
+<p>Следующий код рекурсивно переворачивает список в памяти (вы можете быть уверены, что в списке нет петли)</p>
+<pre>
+struct node_t * reverse(struct node_t *top) {
+  struct node_t *xs;
+  if (NULL == top) return NULL;
+  if (NULL == top->next) return top;
+  xs = reverse(top->next);
+  top->next->next = top;
+  top->next = NULL;
+  return xs;
+}
+</pre>
+<p>Вам необходимо написать и отправить на проверку такую же по смыслу функцию reverse, но работающую итеративно</p>
+<p>В посылке должна быть только указанная функция, отправлять функцию main не нужно</p>
+<br/>
+<p>Пример 1</p>
+<p>Входной список: 2 &rarr; 4 &rarr; 6 &rarr; 1</p>
+<p>Выходной список: 1 &rarr; 6 &rarr; 4 &rarr; 2</p>
+<br/>
+</body>

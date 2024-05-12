@@ -1,0 +1,22 @@
+<head><h3>Problem TS -- площадь треугольника</h3></head>
+<body>
+<p>Вам заранее задан тип данных треугольника</p>
+<pre>
+struct point_t {
+  int x, y;
+};
+struct triangle_t {
+  struct point_t pts[3];
+}
+</pre>
+<p>Ваша задача написать функцию с заданным наперёд именем double_area, которая возвращает его удвоенную площадь</p>
+<pre>
+int double_area(struct triangle_t tr);
+</pre>
+<p>Пример 1.</p>
+<p>Вход: 1 1 2 2 3 3</p>
+<p>Выход: 0</p>
+<p>Пример 2.</p>
+<p>Вход: -1 -1 2 -3 3 -2</p>
+<p>Выход: 5</p>
+</body>

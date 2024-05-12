@@ -1,0 +1,34 @@
+﻿<head><h3>Problem RL -- рекурсия в цикл</h3></head>
+<body>
+<p>Ниже приведён исходный код программы для рекурсивного алгоритма Евклида</p>
+<pre>
+#include &lt;assert.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+unsigned long long gcd(unsigned long long x, 
+                       unsigned long long y) {
+  unsigned long long q;
+  if (y > x)
+    return gcd(y, x);
+  assert (y > 0);
+  q = x % y;
+  if (q == 0)
+    return y;
+  return gcd(y, q);
+}
+
+int main() {
+  unsigned long long x = 0, y = 0, g;
+  int res;
+  
+  res = scanf("%llu %llu", &x, &y);
+  assert(res == 2);
+  g = gcd(x, y);
+  printf("%llu\n", g);
+  return 0;
+}
+</pre>
+<p>Ваша задача: переписать его так, чтобы вместо рекурсии использовался цикл</p>
+<p>Посылка должна состоять из программы, считывающей со стандартного ввода два числа x и y и выводящей на стандартный вывод одно число g</p>
+</body>

@@ -1,0 +1,14 @@
+#!/usr/bin/ruby
+
+in_contents = File.read("#{ARGV[0]}")
+out_contents = File.read("#{ARGV[1]}")
+eta_contents = File.read("#{ARGV[2]}")
+
+in_numbers = in_contents.chomp.split(' ').map{ |o| o.to_i }
+out_numbers = out_contents.chomp.split(' ').map{ |o| o.to_i }
+eta_numbers = eta_contents.chomp.split(' ').map{ |o| o.to_i }
+
+exit 4 if eta_numbers.length != out_numbers.length
+exit 5 if out_numbers[0] != eta_numbers[0]
+
+exit 0

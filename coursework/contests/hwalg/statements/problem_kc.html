@@ -1,0 +1,39 @@
+<head><h3>Problem KC &mdash; алгоритм Рабина-Карпа с учётом коллизий</h3></head>
+<body>
+<p>Считайте что где-то для вас уже написаны следующие функции</p>
+<pre>
+// подсчитать хеш строки от start до fin
+int get_hash(const char *start, const char *fin);
+
+// обновить хеш current, удалив из него cprev и добавив в него cnext
+// здесь n это pow_mod(R, right - 1, Q)
+// возвращает новый хеш
+int update_hash(int current, int n, char cprev, char cnext);
+
+// raise n to power k modulo m
+unsigned long long pow_mod (unsigned n, unsigned k, unsigned m);
+</pre>
+<p>Считайте что для вас также уже объявлены константы R и Q</p>
+<p>Алгоритм Рабина-Карпа без учёта коллизий выглядит следующим образом</p>
+<pre>
+// возвращает номер позиции на которой needle расположена внутри haystack
+// или -1 если ничего не найдено
+int rabin_karp(const char *needle, const char *haystack) {
+  unsigned n, target, cur, count = 0, left = 0, right = strlen(needle);
+  
+  target = get_hash(needle, needle + right);
+  cur = get_hash(haystack, haystack + right);
+  n = pow_mod(R, right - 1, Q);
+
+  while(target != cur &amp;&amp; haystack[right] != 0) {
+    cur = update_hash(cur, n, haystack[left], haystack[right]);
+    left += 1;
+    right += 1;
+  }
+  
+  return (target == cur) ? left : -1;
+}
+</pre>
+<p>Вам нужно изменить и отправить на проверку алгоритм Рабина-Карпа, учтя в нём возможные коллизии</p>
+<p>В посылке должна быть только указанная функция, отправлять функцию main не нужно</p>
+<body>

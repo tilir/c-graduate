@@ -1,0 +1,20 @@
+<head><h3>Problem SU &mdash; поиск в строке независимо от регистра</h3></head>
+<body>
+<p>Ваша задача написать функцию strstrci с наперёд заданным прототипом, которая ищет подстроку в строке, независимо от регистра символов (ci означает case insensitive)</p>
+<pre>
+char * strstrci(char const * needle, char const * haystack);
+</pre>
+<p>Ниже приведён пример применения</p>
+<pre>
+char const *needle = "Ab", *src = "abracadaBra";
+char *pos1, *pos2, *pos3; 
+pos1 = strstrci(src, needle);
+assert(pos1 != NULL);
+pos2 = strstrci(pos1 + 2, needle);
+assert(pos2 != NULL);
+pos3 = strstrci(pos2 + 2, needle);
+assert(pos3 == NULL);
+</pre>
+<p>Первая найденная позиция "<span style="color:red">ab</span>racadabra", вторая "abracad<span style="color:red">aB</span>ra"</p>
+<p>Вы можете реализовать простой и наивный алгоритм с квадратичной асимптотической сложностью, он пройдёт тесты к этой задаче</p>
+</body>

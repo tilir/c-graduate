@@ -1,0 +1,23 @@
+<head><h3>Homework HWK &mdash; алгоритм КМП</h3></head>
+<body>
+<p>Ваша задача:</p>
+<p>Написать функцию patpreproc, которая препроцессирует паттерн, чтобы далее использовать алгоритм Кнута-Морриса-Пратта</p>
+<p>Написать функцию strstrci с наперёд заданным прототипом, которая ищет подстроку в строке, независимо от регистра символов (ci означает case insensitive)</p>
+<pre>
+void patpreproc(char const * needle, int * needle_lps);
+char * strstrci(char const * needle, int const * needle_lps, char const * haystack);
+</pre>
+<p>Ниже приведён пример применения</p>
+<pre>
+char const *needle = "Ab", *src = "abracadaBra";
+char *pos1, *pos2, *pos3; 
+pos1 = strstrci(needle, src);
+assert(pos1 != NULL);
+pos2 = strstrci(needle, pos1 + 2);
+assert(pos2 != NULL);
+pos3 = strstrci(needle, pos2 + 2);
+assert(pos3 == NULL);
+</pre>
+<p>Первая найденная позиция "<span style="color:red">ab</span>racadabra", вторая "abracad<span style="color:red">aB</span>ra"</p>
+<p>В этой задаче простой и наивный алгоритм из Problem SU не пройдёт тесты, так как в тестах есть гигантские строки</p>
+</body>
