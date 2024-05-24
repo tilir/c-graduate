@@ -1,0 +1,29 @@
+<head><h3>Problem AGF &mdash; распознавание простой функции</h3></head>
+<body>
+<p>Ниже приведена некая функция f(x, y)</p>
+<pre>
+// --- int f(int x, int y) ---
+// edi = x
+// esi = y
+// return value = eax
+  .globl  foo
+  .type foo, @function
+foo:
+  mov eax, edi
+  imul  eax, edi
+  imul  eax, edi
+  test  eax, eax
+  js  .L4
+  ret
+.L4:
+  imul  esi, esi
+  add edi, edi
+  mov edx, 17
+  sub edx, edi
+  sub edx, esi
+  add eax, edx
+  ret
+</pre>
+<p>Вам нужно догадаться что это за функция и написать её на языке C.</p>
+<p>Ответом должна быть только foo, функцию main писать не надо.</p>
+</body>

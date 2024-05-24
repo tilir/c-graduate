@@ -1,0 +1,80 @@
+<head><h3>Problem AS2 &mdash; декодер</h3></head>
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+<body>
+<p>Регистровый файл состоит из четырёх восьмиразрядных регистров</p>
+<table>
+  <caption>Register file</caption>
+  <tr>
+    <th>Register</th>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+    <th>D</th>
+  </tr>
+  <tr>
+    <th>Encoding (binary)</th>    
+    <th>00</th>
+    <th>01</th>
+    <th>10</th>
+    <th>11</th>
+  </tr>
+</table>
+
+<p>Вам задана следующая система команд и таблица мнемоник</p>
+<table>
+  <caption>Instruction set</caption>
+  <tr>
+    <th>Mnemonic</th>
+    <th>Encoding (binary)</th>
+  </tr>
+  <tr>
+    <th>MOVI Imm &mdash; move constant to D register</th>
+    <th>0IIIIIII</th>
+  </tr>
+  <tr>
+    <th>ADD R, R &mdash; add two registers modulo 256</th>
+    <th>1000RRRR</th>
+  </tr>
+  <tr>
+    <th>SUB R, R &mdash; sub two registers modulo 256</th>
+    <th>1001RRRR</th>
+  </tr>
+  <tr>
+    <th>MUL R, R &mdash; mul two registers modulo 256</th>
+    <th>1010RRRR</th>
+  </tr>
+  <tr>
+    <th>DIV R, R &mdash; div two registers modulo 256</th>
+    <th>1011RRRR</th>
+  </tr>
+  <tr>
+    <th>IN R &mdash; read register R from keyboard</th>
+    <th>110000RR</th>
+  </tr>
+  <tr>
+    <th>OUT R &mdash; write register R to screen</th>
+    <th>110001RR</th>
+  </tr>
+</table>
+<p>Вам необходимо распечатать hex ввод как текст программы</p>
+<p>В случае ошибки в одной из команд, все предыдущие должны быть распечатаны верно</p>
+<br/>
+<p>Пример 1</p>
+<p>Вход: 0x70 0xc7 0xc1 0x87</p>
+<p>Выход:</p>
+<p>MOVI 112</p>
+<p>OUT D</p>
+<p>IN B</p>
+<p>ADD B, D</p>
+<br/>
+<p>Пример 2</p>
+<p>Вход: 0x70 0xFF 0xc1 0x87</p>
+<p>Выход:</p>
+<p>MOVI 112</p>
+<p>ERROR</p>
+</body>
+

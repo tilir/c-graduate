@@ -1,0 +1,29 @@
+<head><h3>Problem AGA &mdash; распознавание ассемблера ARM</h3></head>
+<body>
+<p>Ниже приведена некая функция foo(x, y)</p>
+<pre>
+foo:
+        mov     x6, x0
+        ldr     w0, [x0]
+        cmp     w1, 1
+        ble     .L1
+        mov     x3, 1
+        mov     w2, w3
+        mov     w7, w3
+.L6:
+        ldr     w4, [x6, x3, lsl 2]
+        sub     w5, w2, #1
+        add     x3, x3, 1
+        cmp     w4, w0
+        csinc   w2, w5, w2, ne
+        cmp     w2, 0
+        csel    w0, w4, w0, eq
+        csel    w2, w2, w7, ne
+        cmp     w1, w3
+        bgt     .L6
+.L1:
+        ret
+</pre>
+<p>Вам нужно догадаться что это за функция и написать её на языке C.</p>
+<p>Ответом должна быть только foo, функцию main писать не надо.</p>
+</body>

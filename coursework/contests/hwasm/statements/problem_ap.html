@@ -1,0 +1,40 @@
+<head><h3>Problem AP &mdash; простые числа на ассемблере</h3></head>
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+.mytab {
+  position:absolute; left:200px;
+}
+</style>
+<body>
+<p>Ниже приведена функция наивной проверки числа на простоту на ассемблере (Linux, 64 bit)</p>
+<pre>
+// --- on entry edi = x (unsigned) ---
+// --- returns 1 if prime, 0 if composite ---
+start:
+	mov	eax, 0
+	cmp	edi, 1
+	jbe	composite
+	cmp	edi, 3
+	jbe	prime
+	test	dil, 1
+	je	composite
+	mov	ecx, 2
+
+loop:
+
+// --- Here something missing ---
+
+  jne     loop
+
+composite:
+  mov     eax, 0
+  ret
+prime:
+  mov     eax, 1
+  ret
+</pre>
+<p>К сожалению, в этом листинге чего-то не хватает, а именно нескольких ассемблерных строчек в указанном месте</p>
+<p>Допишите их так, чтобы процедура отработала корректно</p>
+</body>

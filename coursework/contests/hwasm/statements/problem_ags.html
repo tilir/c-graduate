@@ -1,0 +1,56 @@
+<head><h3>Problem AGS &mdash; распознавание вызова функции</h3></head>
+<body>
+<p>Ниже приведена некая функция caller в System V AMD ABI, вызывающая из себя функцию callee</p>
+<pre>
+  .text
+  .globl  caller
+  .type caller, @function
+caller:
+  push  r13
+  push  r12
+  push  rbp
+  push  rbx
+  sub rsp, 8
+  mov r12d, 1
+  test  esi, esi
+  je  .L1
+  mov eax, edi
+  mov ebx, esi
+  mov r13d, edx
+  mov edx, 0
+  div r13d
+  mov rbp, rdx
+  mov r12d, 1
+  jmp .L5
+.L3:
+  mov edi, ebp
+  mov edx, r13d
+  mov esi, ebp
+  call  callee
+  mov ebp, eax
+  shr ebx
+.L4:
+  test  ebx, ebx
+  je  .L1
+.L5:
+  test  bl, 1
+  je  .L3
+  mov edx, r13d
+  mov esi, ebp
+  mov edi, r12d
+  call  callee
+  mov r12d, eax
+  sub ebx, 1
+  jmp .L4
+.L1:
+  mov eax, r12d
+  add rsp, 8
+  pop rbx
+  pop rbp
+  pop r12
+  pop r13
+  ret
+</pre>
+<p>Вам нужно догадаться что это за функция и написать её на языке C.</p>
+<p>Ответом должна быть только caller, функции main и callee писать не надо.</p>
+</body>
