@@ -33,7 +33,7 @@ int gcd(int x, int y) {
   assert(y != 0);
   q = eu_mod(x, y);
   if (q == 0)
-    return y;
+    return iabs(y);
   return gcd(y, q);
 }
 
