@@ -4,7 +4,8 @@ int foo(int x, int y);
 
 int main() {
   int x, y, z;
-  scanf("%d%d", &x, &y);
+  scanf("%d", &x);
+  y = 0;
   z = foo(x, y);
   printf("%d\n", z);
 }
