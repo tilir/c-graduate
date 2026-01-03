@@ -72,7 +72,7 @@ int argmin_simd(const int *a, int n) {
 
   // process tail
   for (i = mainsz; i < n; i += 1)
-    if (min_arr[i] < min_arr[k])
+    if (a[i] < a[k])
       k = i;
 
   return k;
